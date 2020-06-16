@@ -17,7 +17,7 @@ public interface SignupInterface {
             "Content-Type: application/json",
     })
     @POST("user/finish/profile")
-    Call<FinishProfileModel> finihsProfile(@Header("Authorization") String token, @Body RequestBody body);
+    Call<FinishProfileModel> finishProfile(@Header("Authorization") String token, @Body RequestBody body);
 
     @Headers({
             "Content-Type: application/json"

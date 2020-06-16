@@ -115,7 +115,7 @@ public class FinishSignup extends AppCompatActivity implements DatePickerDialog.
                         .toString());
 
         Call<FinishProfileModel> call = service
-                .finihsProfile(pref.getString("TOKEN","none"),body);
+                .finishProfile(pref.getString("TOKEN","none"),body);
 
         call.enqueue(new Callback<FinishProfileModel>() {
             @Override
