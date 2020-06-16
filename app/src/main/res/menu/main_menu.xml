@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_dashboard"
+        android:icon="@drawable/ic_home"
+        android:title="@string/menu_dashboard" />
+    <item
+        android:id="@+id/menu_guru"
+        android:icon="@drawable/ic_menu_guru"
+        android:title="@string/menu_guru" />
+    <item
+        android:id="@+id/menu_lapor"
+        android:icon="@drawable/ic_menu_lapor"
+        android:title="@string/menu_lapor" />
+    <item
+        android:id="@+id/menu_chat"
+        android:icon="@drawable/ic_menu_chat"
+        android:title="@string/menu_chat" />
+    <item
+        android:id="@+id/menu_profil"
+        android:icon="@drawable/ic_menu_profil"
+        android:title="@string/menu_porfil" />
+
+</menu>

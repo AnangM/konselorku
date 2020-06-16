@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1006984238644",
+    "firebase_url": "https://konselorku-d6343.firebaseio.com",
+    "project_id": "konselorku-d6343",
+    "storage_bucket": "konselorku-d6343.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006984238644:android:303cc0647827847ea19c61",
+        "android_client_info": {
+          "package_name": "com.divistant.konselorku"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006984238644-hr7b5fjt3jhvprkktci9mhrvkt5pp64p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.divistant.konselorku",
+            "certificate_hash": "6a38402d8135e14035c2a31a06d4da60bc9ada8d"
+          }
+        },
+        {
+          "client_id": "1006984238644-glbs3rj97to955jbe99g8ld62rpfddk3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTCBJd7OUvm-1TSLvTZz9d-QVTeqlJMYE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1006984238644-glbs3rj97to955jbe99g8ld62rpfddk3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
