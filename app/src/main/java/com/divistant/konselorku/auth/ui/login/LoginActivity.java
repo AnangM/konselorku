@@ -253,15 +253,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("TOKEN",user.getToken());
-                editor.putString("progress",user.getProgress());
-                editor.commit();
+                editor.putString("UPROGRESS",user.getProgress());
+
 
                 if(user.getProgress().equals("1")){
+                    editor.commit();
                     startActivity(new Intent(getApplicationContext(), FinishSignup.class));
+                    finish();
                 }else if(user.getProgress().equals("2")){
+                    editor.putString("ROLE", user.getRole_code());
+                    editor.commit();
                     startActivity(new Intent(getApplicationContext(), FinishEdu.class));
+                    finish();
                 }else{
+                    editor.putString("ROLE", user.getRole_code());
+                    editor.commit();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
                 }
             }
 

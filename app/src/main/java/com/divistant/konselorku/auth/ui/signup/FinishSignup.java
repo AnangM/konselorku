@@ -6,7 +6,9 @@ import com.divistant.konselorku.R;
 import android.app.DatePickerDialog;
 import android.app.DownloadManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +41,7 @@ public class FinishSignup extends AppCompatActivity implements DatePickerDialog.
     String gender;
     Button nextBtn;
     TextView errTv;
+    SharedPreferences pref;
 
 
     @Override
@@ -55,6 +58,7 @@ public class FinishSignup extends AppCompatActivity implements DatePickerDialog.
         genderSelect = (RadioGroup) findViewById(R.id.finish_gender);
         nextBtn = (Button) findViewById(R.id.finish_selesai);
         errTv = (TextView) findViewById(R.id.finish_err_v);
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         dobLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,11 +114,19 @@ public class FinishSignup extends AppCompatActivity implements DatePickerDialog.
                         (new JSONObject(jsonParam))
                         .toString());
 
-        Call<FinishProfileModel> call = service.finihsProfile(body);
+        Call<FinishProfileModel> call = service
+                .finihsProfile(pref.getString("TOKEN","none"),body);
+
         call.enqueue(new Callback<FinishProfileModel>() {
             @Override
             public void onResponse(Call<FinishProfileModel> call, Response<FinishProfileModel> response) {
+                FinishProfileModel model = response.body();
                 if(response.code()==200){
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("TOKEN","Bearer " + model.getToken());
+                    editor.putString("UPROGRESS",model.getProgress());
+                    editor.putString("ROLE",model.getRole_code());
+                    editor.apply();
                     startActivity(new Intent(getApplicationContext(), FinishEdu.class));
                     finish();
                 }
