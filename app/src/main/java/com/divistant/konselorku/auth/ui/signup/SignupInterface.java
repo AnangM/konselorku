@@ -29,13 +29,13 @@ public interface SignupInterface {
             "Content-Type: application/json"
     })
     @GET("school")
-    Call<UserModel> getSchool(@Header("Authorization") String token);
+    Call<SchoolModel> getSchool(@Header("Authorization") String token);
 
     @Headers({
             "Content-Type: application/json"
     })
     @GET("class")
-    Call<UserModel> getMClasses(@Header("Authorization") String token,@Query("school_id") String school_id);
+    Call<MClassesModel> getMClasses(@Header("Authorization") String token,@Query("school_id") String school_id);
 
 
 }

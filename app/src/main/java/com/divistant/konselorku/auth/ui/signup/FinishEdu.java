@@ -84,7 +84,7 @@ public class FinishEdu extends AppCompatActivity {
 
     private void fillSchool(){
         final SignupInterface service = SignupApi.getClient().create(SignupInterface.class);
-
+        Call<SchoolModel> call = service.getSchool(pref.getString("TOKEN","def"));
     }
 
     @Override

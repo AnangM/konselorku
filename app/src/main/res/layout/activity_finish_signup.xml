@@ -70,12 +70,19 @@
         >
     <EditText
         android:id="@+id/finish_usia"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
         app:layout_constraintTop_toBottomOf="@id/finish_nama"
-        android:hint="Ketuk buat masukin tanggal lahir kamu"
+        android:hint="Ketuk tombol buat pilih tanggal kamu"
         />
+
+        <Button
+            android:id="@+id/finish_btn_cal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Cal"
+            />
     </LinearLayout>
     <TextView
         android:layout_width="wrap_content"

@@ -69,14 +69,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static int RC_SIGN_IN=9001;
     FirebaseAuth fAuth;
     GoogleSignInClient mGSC;
+    SharedPreferences pref;
 
     @Override
     public void onStart(){
         super.onStart();
         FirebaseUser currentUser =fAuth.getCurrentUser();
+        Log.w("[LOGIN]",pref.getString("PROGRESS","default"));
+
         if(currentUser != null){
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            finish();
+            if(pref.getString("PROGRESS","").equals(String.valueOf(1))){
+                startActivity(new Intent(getApplicationContext(), FinishSignup.class));
+            }else if(pref.getString("PROGRESS","").equals(String.valueOf(2))){
+                startActivity(new Intent(getApplicationContext(), FinishEdu.class));
+            }else {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            }
         }
     }
 
@@ -89,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         passwd = (EditText) findViewById(R.id.password);
         signIn = (Button) findViewById(R.id.login);
         signInWithGoogle = (SignInButton) findViewById(R.id.sign_in_google);
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         Thread t = new Thread(new Runnable() {
             @Override
@@ -224,7 +234,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 if(task.isSuccessful()){
                     FirebaseUser user = fAuth.getCurrentUser();
                     doLogin(user.getEmail());
-                    finish();
                 }else{
                     Log.e("[FAUTH]","Auth Error");
                 }
@@ -248,28 +257,33 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onResponse(Call<UserModel> call, Response<UserModel> response) {
                 Log.e("[AUTH]", String.valueOf(response.code()));
+                Log.e("[AUTH]",response.raw().toString());
+                if(response.code() == 200) {
+                    final UserModel user = response.body();
 
-                final UserModel user = response.body();
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("TOKEN","Bearer " + user.getToken());
-                editor.putString("UPROGRESS",user.getProgress());
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("TOKEN", "Bearer " + user.getToken());
+                    editor.putString("UPROGRESS", user.getProgress());
 
-
-                if(user.getProgress().equals("1")){
-                    editor.commit();
-                    startActivity(new Intent(getApplicationContext(), FinishSignup.class));
-                    finish();
-                }else if(user.getProgress().equals("2")){
-                    editor.putString("ROLE", user.getRole_code());
-                    editor.commit();
-                    startActivity(new Intent(getApplicationContext(), FinishEdu.class));
-                    finish();
+                    if (user.getProgress().equals("1")) {
+                        editor.commit();
+                        startActivity(new Intent(getApplicationContext(), FinishSignup.class));
+                        finish();
+                    } else if (user.getProgress().equals("2")) {
+                        editor.putString("ROLE", user.getRole_code());
+                        editor.commit();
+                        startActivity(new Intent(getApplicationContext(), FinishEdu.class));
+                        finish();
+                    } else {
+                        editor.putString("ROLE", user.getRole_code());
+                        editor.commit();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        finish();
+                    }
                 }else{
-                    editor.putString("ROLE", user.getRole_code());
-                    editor.commit();
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    finish();
+                    Toast.makeText(getApplicationContext(),
+                            String.valueOf(response.code()),Toast.LENGTH_LONG).show();
                 }
             }
 

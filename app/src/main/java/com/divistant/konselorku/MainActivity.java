@@ -21,6 +21,8 @@ import android.view.View;
 import androidx.appcompat.widget.Toolbar;
 
 import com.divistant.konselorku.auth.ui.login.LoginActivity;
+import com.divistant.konselorku.auth.ui.signup.FinishEdu;
+import com.divistant.konselorku.auth.ui.signup.FinishSignup;
 import com.divistant.konselorku.ui.chat.ChatFragment;
 import com.divistant.konselorku.ui.dashboard.ArticleClickListener;
 import com.divistant.konselorku.ui.dashboard.ContentFragment;
@@ -34,13 +36,23 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity{
+    SharedPreferences pref;
 
     @Override
     public void onStart(){
         super.onStart();
+        Log.e("PREF",pref.getString("UPROGRESS","Default prog"));
         if(FirebaseAuth.getInstance().getCurrentUser() == null){
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
+        }else{
+            if(pref.getString("UPROGRESS","").equals(String.valueOf(1))){
+                startActivity(new Intent(getApplicationContext(), FinishSignup.class));
+                finish();
+            }else if(pref.getString("UPROGRESS","").equals(String.valueOf(2))){
+                startActivity(new Intent(getApplicationContext(), FinishEdu.class));
+                finish();
+            }
         }
     }
 
@@ -49,6 +61,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final BottomNavigationView menu =findViewById(R.id.menu_view);
         FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
         DashboardFragment df1 = new DashboardFragment();
