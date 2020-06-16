@@ -252,7 +252,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 final UserModel user = response.body();
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("TOKEN",user.getToken());
+                editor.putString("TOKEN","Bearer " + user.getToken());
                 editor.putString("UPROGRESS",user.getProgress());
 
 

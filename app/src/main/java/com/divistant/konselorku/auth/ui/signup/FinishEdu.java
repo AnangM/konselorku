@@ -82,6 +82,11 @@ public class FinishEdu extends AppCompatActivity {
         });
     }
 
+    private void fillSchool(){
+        final SignupInterface service = SignupApi.getClient().create(SignupInterface.class);
+
+    }
+
     @Override
     public void onBackPressed() {
         moveTaskToBack(false);
