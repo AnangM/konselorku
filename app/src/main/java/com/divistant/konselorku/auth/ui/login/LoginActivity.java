@@ -32,6 +32,7 @@ import com.divistant.konselorku.MainActivity;
 import com.divistant.konselorku.R;
 import com.divistant.konselorku.auth.ui.signup.FinishEdu;
 import com.divistant.konselorku.auth.ui.signup.FinishSignup;
+import com.divistant.konselorku.auth.ui.signup.SignupActivity;
 import com.divistant.konselorku.ui.intro.IntroActivity;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -70,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     FirebaseAuth fAuth;
     GoogleSignInClient mGSC;
     SharedPreferences pref;
+    TextView gotoSignUp;
 
     @Override
     public void onStart(){
@@ -99,6 +101,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signIn = (Button) findViewById(R.id.login);
         signInWithGoogle = (SignInButton) findViewById(R.id.sign_in_google);
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        gotoSignUp = (TextView)  findViewById(R.id.signin_goto_signup);
 
         Thread t = new Thread(new Runnable() {
             @Override
@@ -156,6 +159,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View v){
                 doLogIn();
+            }
+        });
+
+        gotoSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), SignupActivity.class));
+                finish();
             }
         });
 

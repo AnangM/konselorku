@@ -2,6 +2,8 @@ package com.divistant.konselorku.auth.ui.signup;
 
 import com.divistant.konselorku.auth.ui.login.UserModel;
 
+import java.util.List;
+
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -32,14 +34,14 @@ public interface SignupInterface {
             "Accept: application/json"
     })
     @GET("school")
-    Call<SchoolModel> getSchool(@Header("Authorization") String token);
+    Call<List<SchoolModel>> getSchool(@Header("Authorization") String token);
 
     @Headers({
             "Content-Type: application/json",
             "Accept: application/json"
     })
     @GET("class")
-    Call<MClassesModel> getMClasses(@Header("Authorization") String token,@Query("school_id") String school_id);
+    Call<List<MClassesModel>> getMClasses(@Header("Authorization") String token,@Query("school_id") String school_id);
 
 
 }
