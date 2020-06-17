@@ -2,6 +2,7 @@ package com.divistant.konselorku.auth.ui.signup;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ public class FinishEdu extends AppCompatActivity {
         doneBtn = (Button) findViewById(R.id.edu_finish);
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         schoolModelList = new ArrayList<>();
+        mClassSpinnerItem.add("Pilih Kelas");
         fillSchool();
 
         adapter = new ArrayAdapter<String>(
@@ -58,6 +60,7 @@ public class FinishEdu extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sItem = (Spinner) findViewById(R.id.edu_sekolah);
         sItem.setAdapter(adapter);
+
 
         mClassAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item,
@@ -75,9 +78,11 @@ public class FinishEdu extends AppCompatActivity {
             }
         });
 
+
         sItem.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("[SPINNER]","Selected Item Listener");
                 fillClasses(position);
                 mClassAdapter.notifyDataSetChanged();
             }
@@ -93,11 +98,11 @@ public class FinishEdu extends AppCompatActivity {
     private void finishEdu(){
         int school = sItem.getSelectedItemPosition();
         int mClassPos = mClassSpinner.getSelectedItemPosition();
-
+        Log.e("[GO]",schoolModelList.get(school).getId() + " - " + classModelList.get(mClassPos).getM_classes_id()) ;
         final SignupInterface service = SignupApi.getClient().create(SignupInterface.class);
         Map<String, Object> jsonParam = new ArrayMap<>();
         jsonParam.put("m_classes_id",schoolModelList.get(school).getId());
-        jsonParam.put("school_id",classModelList.get(mClassPos).getId());
+        jsonParam.put("school_id",classModelList.get(mClassPos).getM_classes_id());
 
         RequestBody body = RequestBody.create(okhttp3.MediaType
                         .parse("application/json; charset=utf-8"),
@@ -107,9 +112,17 @@ public class FinishEdu extends AppCompatActivity {
         Call<UserModel> call = service
                 .finihsEdu(pref.getString("TOKEN","none"),body);
 
+        final ProgressDialog loadingDialog = new ProgressDialog(FinishEdu.this);
+        loadingDialog.setMax(100);
+        loadingDialog.setMessage("Tunggu sebentar ya");
+        loadingDialog.setTitle("Loading");
+        loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loadingDialog.show();
+
         call.enqueue(new Callback<UserModel>() {
             @Override
             public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                loadingDialog.dismiss();
                 UserModel model = response.body();
                 if(response.code() == 200){
                     SharedPreferences.Editor editor = pref.edit();
@@ -119,11 +132,16 @@ public class FinishEdu extends AppCompatActivity {
                     editor.apply();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
+                }else{
+                    Log.e("[Fedu]",response.raw().toString());
+                    Toast.makeText(FinishEdu.this,
+                            String.valueOf(response.code()),Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<UserModel> call, Throwable t) {
+                loadingDialog.dismiss();
                 Log.e("[FEdu]",t.getMessage());
                 Toast.makeText(getApplicationContext(), t.getMessage(),Toast.LENGTH_LONG).show();
             }
@@ -133,6 +151,14 @@ public class FinishEdu extends AppCompatActivity {
     private void fillSchool(){
         final SignupInterface service = SignupApi.getClient().create(SignupInterface.class);
         Call<List<SchoolModel>> call = service.getSchool(pref.getString("TOKEN","def"));
+
+        final ProgressDialog loadingDialog = new ProgressDialog(FinishEdu.this);
+        loadingDialog.setMax(100);
+        loadingDialog.setMessage("Tunggu sebentar ya");
+        loadingDialog.setTitle("Loading");
+        loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loadingDialog.show();
+
         call.enqueue(new Callback<List<SchoolModel>>() {
             @Override
             public void onResponse(Call<List<SchoolModel>> call, Response<List<SchoolModel>> response) {
@@ -141,16 +167,19 @@ public class FinishEdu extends AppCompatActivity {
                     for(SchoolModel school : schoolModelList){
                         schoolSpinner.add(school.getName());
                     }
+                    adapter.notifyDataSetChanged();
                 }else{
                     Toast.makeText(getApplicationContext(),
                             String.valueOf(response.code()),
                             Toast.LENGTH_LONG)
                             .show();
                 }
+                loadingDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<List<SchoolModel>> call, Throwable t) {
+                loadingDialog.dismiss();
                 Log.e("[FEdu]",t.getMessage());
                 Toast.makeText(getApplicationContext(), t.getMessage(),Toast.LENGTH_LONG)
                         .show();
@@ -159,14 +188,16 @@ public class FinishEdu extends AppCompatActivity {
     }
 
     public void fillClasses(int pos){
+        Log.e("[CLASS SPINNER]","GETTING DATA FROM ID " + schoolModelList.get(pos).getId());
         final SignupInterface service = SignupApi.getClient().create(SignupInterface.class);
         Call<List<MClassesModel>> call = service.getMClasses(
                 pref.getString("TOKEN","def"),
-                String.valueOf(pos));
+                schoolModelList.get(pos).getId());
         call.enqueue(new Callback<List<MClassesModel>>() {
             @Override
             public void onResponse(Call<List<MClassesModel>> call, Response<List<MClassesModel>> response) {
                 if(response.code() == 200){
+                    Log.e("[CLASS SPINNER]","RESULT " + response.code());
                     classModelList = response.body();
                     for(MClassesModel mClass : classModelList){
                         mClassSpinnerItem.add(mClass.getName());

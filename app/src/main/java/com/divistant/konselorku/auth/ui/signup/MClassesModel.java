@@ -1,24 +1,24 @@
 package com.divistant.konselorku.auth.ui.signup;
 
 public class MClassesModel {
-    private String id;
+    private String m_classes_id;
     private String name;
     private String grade;
     private String school_id;
 
-    public MClassesModel(String id, String name, String grade, String school_id) {
-        this.id = id;
+    public MClassesModel(String m_classes_id, String name, String grade, String school_id) {
+        this.m_classes_id = m_classes_id;
         this.name = name;
         this.grade = grade;
         this.school_id = school_id;
     }
 
-    public String getId() {
-        return id;
+    public String getM_classes_id() {
+        return m_classes_id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setM_classes_id(String m_classes_id) {
+        this.m_classes_id = m_classes_id;
     }
 
     public String getName() {

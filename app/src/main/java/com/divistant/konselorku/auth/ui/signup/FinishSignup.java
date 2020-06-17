@@ -79,7 +79,7 @@ public class FinishSignup extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                               setDobText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                               setDobText(year+"/"+(monthOfYear+1)+"/"+dayOfMonth);
 
                             }
                         }, mYear, mMonth, mDay);
@@ -150,7 +150,6 @@ public class FinishSignup extends AppCompatActivity {
         call.enqueue(new Callback<FinishProfileModel>() {
             @Override
             public void onResponse(Call<FinishProfileModel> call, Response<FinishProfileModel> response) {
-                Toast.makeText(getApplicationContext(),String.valueOf(response.code()),Toast.LENGTH_LONG).show();
                 FinishProfileModel model = response.body();
                 if(response.code()==200){
                     SharedPreferences.Editor editor = pref.edit();
@@ -163,6 +162,8 @@ public class FinishSignup extends AppCompatActivity {
                 }else if(response.code() == 400){
                     errTv.setText("Kode referal tidak valid!");
                     errTv.setVisibility(View.VISIBLE);
+                }else{
+                    Toast.makeText(getApplicationContext(),String.valueOf(response.code()),Toast.LENGTH_LONG).show();
                 }
             }
 
