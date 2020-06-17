@@ -153,10 +153,31 @@
         />
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/finish_ref"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="Punya kode referal?"
+        android:textSize="18sp"
+        android:textColor="@color/darkText"
+        />
+
+    <EditText
+        android:id="@+id/finish_ref"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@id/finish_phone"
+        android:hint="Masukin nomor kode kamu disini"
+        />
+
+
+
+    <TextView
         android:id="@+id/finish_err_v"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/finish_phone"
+        app:layout_constraintTop_toBottomOf="@id/finish_ref"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:textColor="#ff0000"
@@ -164,7 +185,7 @@
         android:visibility="invisible"
         android:textSize="18sp"
         android:textAlignment="center"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         />
 
     <Button

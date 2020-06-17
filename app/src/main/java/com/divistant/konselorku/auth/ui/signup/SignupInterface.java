@@ -15,24 +15,28 @@ public interface SignupInterface {
 
     @Headers({
             "Content-Type: application/json",
+            "Accept: application/json"
     })
     @POST("user/finish/profile")
     Call<FinishProfileModel> finishProfile(@Header("Authorization") String token, @Body RequestBody body);
 
     @Headers({
-            "Content-Type: application/json"
+            "Content-Type: application/json",
+            "Accept: application/json"
     })
     @POST("user/finish/edu")
     Call<UserModel> finihsEdu(@Header("Authorization") String token, @Body RequestBody body);
 
     @Headers({
-            "Content-Type: application/json"
+            "Content-Type: application/json",
+            "Accept: application/json"
     })
     @GET("school")
     Call<SchoolModel> getSchool(@Header("Authorization") String token);
 
     @Headers({
-            "Content-Type: application/json"
+            "Content-Type: application/json",
+            "Accept: application/json"
     })
     @GET("class")
     Call<MClassesModel> getMClasses(@Header("Authorization") String token,@Query("school_id") String school_id);

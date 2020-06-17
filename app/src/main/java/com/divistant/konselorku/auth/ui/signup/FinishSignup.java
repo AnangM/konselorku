@@ -44,7 +44,7 @@ public class FinishSignup extends AppCompatActivity {
     TextView errTv;
     SharedPreferences pref;
     Button btnCal;
-
+    EditText code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class FinishSignup extends AppCompatActivity {
         errTv = (TextView) findViewById(R.id.finish_err_v);
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         btnCal = (Button) findViewById(R.id.finish_btn_cal);
-
+        code = (EditText) findViewById(R.id.finish_ref);
 
         btnCal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,8 +117,6 @@ public class FinishSignup extends AppCompatActivity {
                     errTv.setText(checkUserData());
                     errTv.setVisibility(View.VISIBLE);
                 }
-
-
             }
         });
 
@@ -136,6 +134,10 @@ public class FinishSignup extends AppCompatActivity {
         jsonParam.put("dob",dob.getText());
         jsonParam.put("address",alamat.getText());
         jsonParam.put("phone",phone.getText());
+        if(code.getText().toString().length() > 0){
+            jsonParam.put("code",code.getText());
+        }
+
 
         RequestBody body = RequestBody.create(okhttp3.MediaType
                         .parse("application/json; charset=utf-8"),
@@ -158,6 +160,9 @@ public class FinishSignup extends AppCompatActivity {
                     editor.apply();
                     startActivity(new Intent(getApplicationContext(), FinishEdu.class));
                     finish();
+                }else if(response.code() == 400){
+                    errTv.setText("Kode referal tidak valid!");
+                    errTv.setVisibility(View.VISIBLE);
                 }
             }
 
