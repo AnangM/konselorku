@@ -47,6 +47,8 @@ public class ProfileFragment extends Fragment {
             tv.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
         }
 
+        Log.e("TOKEN",pref.getString("TOKEN","def"));
+
         final Button sinot = view.findViewById(R.id.profile_signout);
 
         sinot.setOnClickListener(new View.OnClickListener() {
@@ -83,4 +85,5 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
 }

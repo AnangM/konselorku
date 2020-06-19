@@ -38,6 +38,8 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity{
     SharedPreferences pref;
 
+
+
     @Override
     public void onStart(){
         super.onStart();
@@ -101,6 +103,14 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+            finish();
+        }
     }
 
 

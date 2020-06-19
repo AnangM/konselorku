@@ -66,7 +66,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop();
-        if(!((Activity)holder.imageView.getContext()).isFinishing()){
+        if(!((Activity)holder.imageView.getContext()).isFinishing()
+                && holder.imageView.getContext() != null){
+
         Glide.with(holder.imageView.getContext())
                 .load(R.drawable.ic_launcher_foreground)
                 .apply(requestOptions)

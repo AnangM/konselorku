@@ -200,7 +200,7 @@ public class FinishEdu extends AppCompatActivity {
                     Log.e("[CLASS SPINNER]","RESULT " + response.code());
                     classModelList = response.body();
                     for(MClassesModel mClass : classModelList){
-                        mClassSpinnerItem.add(mClass.getName());
+                        mClassSpinnerItem.add(mClass.getGrade() + " - " + mClass.getName());
                     }
                 }else{
                     Toast.makeText(getApplicationContext(),

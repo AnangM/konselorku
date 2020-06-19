@@ -1,4 +1,7 @@
-package com.divistant.konselorku.auth.ui.login;
+package com.divistant.konselorku.ui.chat;
+
+import com.divistant.util.GeneralResponse;
+
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -6,21 +9,19 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Url;
 
-
-public interface LoginInterface {
+public interface ChatInterface {
     @Headers({
             "Content-Type: application/json",
             "Accept: application/json"
     })
-    @POST("user/login")
-    Call<UserModel> doLogin(@Body RequestBody body);
+    @GET("chat/room")
+    Call<GeneralResponse<ChatRoomModel>> getRooms(@Header("Authorization") String token);
 
     @Headers({
             "Content-Type: application/json",
             "Accept: application/json"
     })
-    @GET("user/logout")
-    Call<LogoutModel> doLogout(@Header("Authorization") String token);
+    @POST("chat/room/new")
+    Call<GeneralResponse<NewChatRoomModel>> addRooms(@Header("Authorization") String token,@Body RequestBody body);
 }

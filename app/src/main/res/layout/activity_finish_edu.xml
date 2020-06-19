@@ -40,10 +40,11 @@
         android:text="Kamu sekolah dimana?"
         android:textSize="18sp"
         android:textColor="@color/darkText"
+        android:layout_marginBottom="10dp"
         />
     <Spinner
         android:id="@+id/edu_sekolah"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/edu_subtitle"
@@ -53,35 +54,19 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/edu_grade"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:text="Kamu kelas berapa?"
-        android:textSize="18sp"
-        android:textColor="@color/darkText"
-        />
-    <Spinner
-        android:id="@+id/edu_grade"
-        android:layout_marginTop="40dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/edu_sekolah"
-        android:spinnerMode="dialog"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/edu_kelas"
         app:layout_constraintLeft_toLeftOf="parent"
         android:text="Kamu kelas apa"
         android:textSize="18sp"
+        android:layout_marginBottom="10dp"
         android:textColor="@color/darkText"
         />
     <Spinner
         android:id="@+id/edu_kelas"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/edu_grade"
+        app:layout_constraintTop_toBottomOf="@id/edu_sekolah"
         android:spinnerMode="dialog"
         />
     <TextView

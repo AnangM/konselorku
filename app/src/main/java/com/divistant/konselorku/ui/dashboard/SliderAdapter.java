@@ -64,7 +64,7 @@ public class SliderAdapter extends PagerAdapter {
             post.GetImageUrl(new ImageGetter() {
             @Override
             public void imageGetter(String url) {
-                if(!((Activity)iv.getContext()).isFinishing()){
+                if(!((Activity)iv.getContext()).isFinishing() && iv.getContext() != null){
                 Glide.with(iv.getContext())
                         .load(url)
                         .apply(requestOptions)
@@ -74,10 +74,12 @@ public class SliderAdapter extends PagerAdapter {
             }
         });
         }else{
-            Glide.with(iv.getContext())
-                    .load(images.get(position))
-                    .apply(requestOptions)
-                    .into(iv);
+            if(!((Activity)iv.getContext()).isFinishing() && iv.getContext() != null) {
+                Glide.with(iv.getContext())
+                        .load(images.get(position))
+                        .apply(requestOptions)
+                        .into(iv);
+            }
         }
 
         ViewPager vp = (ViewPager) container;
