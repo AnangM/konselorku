@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.divistant.konselorku.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHolder> {
@@ -35,9 +36,12 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChatRoomModel room = rooms.get(position);
+
         if(room.getRoom_image() == null){
             holder.imageText.setVisibility(View.VISIBLE);
-            holder.imageText.setText(room.getRoom_name().toUpperCase().charAt(0));
+            String ava = room.getRoom_name().toUpperCase();
+            char use= ava.charAt(0);
+            holder.imageText.setText(String.valueOf(use));
             holder.image.setVisibility(View.INVISIBLE);
         }else{
             holder.imageText.setVisibility(View.INVISIBLE);

@@ -1,7 +1,7 @@
 package com.divistant.konselorku.ui.chat;
 
 public class ChatRoomModel {
-    private String room_name;
+    private String room_name = "D";
     private String room_id;
     private boolean is_active;
     private String room_image;

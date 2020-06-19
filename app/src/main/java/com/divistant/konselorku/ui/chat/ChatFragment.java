@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.divistant.util.GeneralResponse;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -28,7 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChatFragment extends Fragment {
-    private List<ChatRoomModel> rooms;
+    private List<ChatRoomModel> rooms = new ArrayList<>();
     private ChatRoomAdapter adapter;
     SharedPreferences pref;
 
@@ -46,7 +48,7 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.chat_room_rv);
-        TextView tv = (TextView) view.findViewById(R.id.chat_room_tv);
+        final TextView tv = (TextView) view.findViewById(R.id.chat_room_tv);
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
@@ -55,7 +57,7 @@ public class ChatFragment extends Fragment {
         adapter = new ChatRoomAdapter(rooms);
         rv.setAdapter(adapter);
 
-        final ProgressDialog loadingDialog = new ProgressDialog(getActivity().getApplicationContext());
+        final ProgressDialog loadingDialog = new ProgressDialog(getActivity());
         loadingDialog.setMax(100);
         loadingDialog.setMessage("Mengambil data chat");
         loadingDialog.setTitle("Tunggu sebentar ya");
@@ -71,6 +73,7 @@ public class ChatFragment extends Fragment {
                 if(response.code() == 200){
                     GeneralResponse<ChatRoomModel> gReponse = response.body();
                         if(!(gReponse.getListSize() < 1)){
+                            tv.setVisibility(View.INVISIBLE);
                             List<ChatRoomModel> roomModelList = gReponse.getData();
                             for(ChatRoomModel room : roomModelList){
                                 rooms.add(room);

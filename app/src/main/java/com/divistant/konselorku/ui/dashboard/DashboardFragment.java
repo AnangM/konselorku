@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.divistant.konselorku.BuildConfig;
@@ -74,6 +75,11 @@ public class DashboardFragment extends Fragment{
     final PostAdapter adapter = new PostAdapter(postList);
     rv.setAdapter(adapter);
 
+    final ProgressBar barsatu = (ProgressBar) view.findViewById(R.id.dash_loading_one);
+    final ProgressBar bardua = (ProgressBar) view.findViewById(R.id.dash_loading_two);
+    barsatu.setVisibility(View.VISIBLE);
+    bardua.setVisibility(View.VISIBLE);
+
     viewPager = (ViewPager) view.findViewById(R.id.view_pager);
 
 
@@ -87,6 +93,8 @@ public class DashboardFragment extends Fragment{
         call.enqueue(new Callback<List<PostModel>>() {
             @Override
             public void onResponse(Call<List<PostModel>> call, Response<List<PostModel>> response) {
+                bardua.setVisibility(View.GONE);
+                barsatu.setVisibility(View.GONE);
                 final List<PostModel> posts = response.body();
                 if(posts.size() > 0){
                     for(int i =0; i< posts.size();i++){
@@ -98,28 +106,28 @@ public class DashboardFragment extends Fragment{
                         }
                     }
                 }
-                adapter.setOnArticleClickListener(new ArticleClickListener() {
-                    @Override
-                    public void onArticleClick(int position, View v) {
-                        switch (v.getId()){
-                            case R.id.news_item_parent:
-                                PostModel post = (PostModel) v.getTag();
-                                if(!TextUtils.isEmpty(post.getId())){
-                                    FragmentTransaction ft = getActivity()
-                                            .getSupportFragmentManager().beginTransaction();
-
-                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                                    ContentFragment target = new ContentFragment(post);
-                                    ft.replace(R.id.nav_host_fragment,target);
-                                    ft.addToBackStack(null);
-                                    ft.commit();
-
-                                }else{
-                                    Log.e("[Dash Article Error]","Selected article returned null id");
-                                }
-                        }
-                    }
-                });
+//                adapter.setOnArticleClickListener(new ArticleClickListener() {
+//                    @Override
+//                    public void onArticleClick(int position, View v) {
+//                        switch (v.getId()){
+//                            case R.id.news_item_parent:
+//                                PostModel post = (PostModel) v.getTag();
+//                                if(!TextUtils.isEmpty(post.getId())){
+//                                    FragmentTransaction ft = getActivity()
+//                                            .getSupportFragmentManager().beginTransaction();
+//
+//                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                                    ContentFragment target = new ContentFragment(post);
+//                                    ft.replace(R.id.nav_host_fragment,target);
+//                                    ft.addToBackStack(null);
+//                                    ft.commit();
+//
+//                                }else{
+//                                    Log.e("[Dash Article Error]","Selected article returned null id");
+//                                }
+//                        }
+//                    }
+//                });
                 adapter.notifyDataSetChanged();
                 sa.notifyDataSetChanged();
                 Timer timer = new Timer();

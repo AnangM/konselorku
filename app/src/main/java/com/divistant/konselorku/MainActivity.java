@@ -3,6 +3,7 @@ package com.divistant.konselorku;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
 import com.divistant.konselorku.auth.ui.login.LoginActivity;
 import com.divistant.konselorku.auth.ui.signup.FinishEdu;
@@ -35,8 +37,10 @@ import com.divistant.konselorku.ui.profil.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements  BottomNavigationView.OnNavigationItemSelectedListener{
     SharedPreferences pref;
+    ViewPager vp;
+    BottomNavigationView menu;
 
 
 
@@ -64,54 +68,74 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        final BottomNavigationView menu =findViewById(R.id.menu_view);
-        FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
-        DashboardFragment df1 = new DashboardFragment();
-        ft1.replace(R.id.nav_host_fragment, df1);
-        ft1.addToBackStack(null);
-        ft1.commit();
+        vp = (ViewPager) findViewById(R.id.main_view_pager);
+        menu  = (BottomNavigationView) findViewById(R.id.menu_view);
+        menu.setOnNavigationItemSelectedListener(this);
+        MainViewPagerAdapter vpAdapter = new MainViewPagerAdapter(getSupportFragmentManager(),
+                FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        vp.setAdapter(vpAdapter);
 
-        menu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    switch (menuItem.getItemId()){
-                        case R.id.menu_dashboard:
-                            DashboardFragment df = new DashboardFragment();
-                            ft.replace(R.id.nav_host_fragment,df);
-                            break;
-                        case  R.id.menu_guru:
-                            GuruFragment gf = new GuruFragment();
-                            ft.replace(R.id.nav_host_fragment,gf);
-                            break;
-                        case R.id.menu_lapor:
-                            LaporFragment lf = new LaporFragment();
-                            ft.replace(R.id.nav_host_fragment, lf);
-                            break;
-                        case R.id.menu_chat:
-                            ChatFragment cf = new ChatFragment();
-                            ft.replace(R.id.nav_host_fragment, cf);
-                            break;
-                        case R.id.menu_profil:
-                            ProfileFragment pf =new ProfileFragment();
-                            ft.replace(R.id.nav_host_fragment, pf);
-                            break;
-                    }
-                    ft.addToBackStack(null);
-                    ft.commit();
-                return true;
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0:
+                        menu.getMenu().findItem(R.id.menu_dashboard).setChecked(true);
+                        break;
+                    case 1:
+                        menu.getMenu().findItem(R.id.menu_guru).setChecked(true);
+                        break;
+                    case 2:
+                        menu.getMenu().findItem(R.id.menu_lapor).setChecked(true);
+                        break;
+                    case 3:
+                        menu.getMenu().findItem(R.id.menu_chat).setChecked(true);
+                        break;
+                    case 4:
+                        menu.getMenu().findItem(R.id.menu_profil).setChecked(true);
+                        break;
+                    default:
+                        menu.getMenu().findItem(R.id.menu_dashboard).setChecked(true);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
+
 
     }
 
     @Override
-    public void onBackPressed(){
-        super.onBackPressed();
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
-            finish();
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.menu_dashboard:
+                vp.setCurrentItem(0);
+                break;
+            case R.id.menu_guru:
+                vp.setCurrentItem(1);
+                break;
+            case R.id.menu_lapor:
+                vp.setCurrentItem(2);
+                break;
+            case R.id.menu_chat:
+                vp.setCurrentItem(3);
+                break;
+            case R.id.menu_profil:
+                vp.setCurrentItem(4);
+                break;
+            default:
+                vp.setCurrentItem(0);
+                break;
         }
+        return true;
     }
-
-
 }
