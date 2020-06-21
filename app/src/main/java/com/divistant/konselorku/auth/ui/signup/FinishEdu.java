@@ -129,6 +129,7 @@ public class FinishEdu extends AppCompatActivity {
                     editor.putString("TOKEN","Bearer " + model.getToken());
                     editor.putString("UPROGRESS",model.getProgress());
                     editor.putString("ROLE",model.getRole_code());
+                    editor.putString("UID",model.getUser_id());
                     editor.apply();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();

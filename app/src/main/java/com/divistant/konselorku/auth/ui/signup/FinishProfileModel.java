@@ -6,6 +6,16 @@ public class FinishProfileModel {
     private String role_code;
     private String progress;
     private String token;
+    private String user_id;
+
+    public FinishProfileModel(String status, String name, String role_code, String progress, String token, String user_id) {
+        this.status = status;
+        this.name = name;
+        this.role_code = role_code;
+        this.progress = progress;
+        this.token = token;
+        this.user_id = user_id;
+    }
 
     public FinishProfileModel(String status, String name, String role_code, String progress, String token) {
         this.status = status;
@@ -13,6 +23,14 @@ public class FinishProfileModel {
         this.role_code = role_code;
         this.progress = progress;
         this.token = token;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     public String getStatus() {

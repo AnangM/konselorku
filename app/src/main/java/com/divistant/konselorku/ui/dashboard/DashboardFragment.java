@@ -2,6 +2,7 @@ package com.divistant.konselorku.ui.dashboard;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -29,6 +30,7 @@ import com.divistant.konselorku.BuildConfig;
 import com.divistant.konselorku.R;
 import com.divistant.konselorku.net.news.NewsApi;
 import com.divistant.konselorku.net.news.NewsInterface;
+import com.divistant.util.RecyclerItemClickListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -51,7 +53,6 @@ public class DashboardFragment extends Fragment{
     List<Integer> color;
     List<String> colorName;
 
-    private DashboardViewModel dashboardViewModel;
     private final List<PostModel> postList = new ArrayList<>();
     public DashboardFragment() {
         // Required empty public constructor
@@ -106,28 +107,21 @@ public class DashboardFragment extends Fragment{
                         }
                     }
                 }
-//                adapter.setOnArticleClickListener(new ArticleClickListener() {
-//                    @Override
-//                    public void onArticleClick(int position, View v) {
-//                        switch (v.getId()){
-//                            case R.id.news_item_parent:
-//                                PostModel post = (PostModel) v.getTag();
-//                                if(!TextUtils.isEmpty(post.getId())){
-//                                    FragmentTransaction ft = getActivity()
-//                                            .getSupportFragmentManager().beginTransaction();
-//
-//                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                                    ContentFragment target = new ContentFragment(post);
-//                                    ft.replace(R.id.nav_host_fragment,target);
-//                                    ft.addToBackStack(null);
-//                                    ft.commit();
-//
-//                                }else{
-//                                    Log.e("[Dash Article Error]","Selected article returned null id");
-//                                }
-//                        }
-//                    }
-//                });
+
+                rv.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), rv,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent i = new Intent(getActivity().getApplicationContext(),ReadNewsActivity.class);
+                        i.putExtra("post",new Gson().toJson(posts.get(position)));
+                        startActivity(i);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+                }));
                 adapter.notifyDataSetChanged();
                 sa.notifyDataSetChanged();
                 Timer timer = new Timer();

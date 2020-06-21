@@ -4,25 +4,62 @@ import com.google.gson.annotations.SerializedName;
 
 public class GuruModel {
     @SerializedName("id") private String id;
+    @SerializedName("avatar") private String avatar;
     @SerializedName("name") private String name;
     @SerializedName("email") private String email;
-    @SerializedName("channel") private String channel;
+    @SerializedName("phone") private String phone;
+    @SerializedName("about_id") private String about_id;
+    @SerializedName("title") private String title;
     @SerializedName("about") private String about;
-    @SerializedName("education") private String education;
-    @SerializedName("work") private String work;
+    @SerializedName("role_id") private String role_id;
+    @SerializedName("role_code") private String role_code;
+
 
     public GuruModel() {
     }
 
-    public GuruModel(String id, String name, String email, String channel, String about,
-                     String education, String work) {
+    public GuruModel(String id, String avatar, String name, String email, String phone, String about_id, String title, String about, String role_id, String role_code) {
+        this.id = id;
+        this.avatar = avatar;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.about_id = about_id;
+        this.title = title;
+        this.about = about;
+        this.role_id = role_id;
+        this.role_code = role_code;
+    }
+
+    public GuruModel(String id, String name, String email, String phone, String role_id, String role_code) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.channel = channel;
+        this.phone = phone;
+        this.role_id = role_id;
+        this.role_code = role_code;
+    }
+
+    public GuruModel(String id, String avatar, String name, String email, String phone, String role_id, String role_code) {
+        this.id = id;
+        this.avatar = avatar;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.role_id = role_id;
+        this.role_code = role_code;
+    }
+
+    public GuruModel(String id, String name, String email, String phone, String about_id, String title, String about, String role_id, String role_code) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.about_id = about_id;
+        this.title = title;
         this.about = about;
-        this.education = education;
-        this.work = work;
+        this.role_id = role_id;
+        this.role_code = role_code;
     }
 
     public String getId() {
@@ -31,6 +68,14 @@ public class GuruModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getName() {
@@ -49,12 +94,28 @@ public class GuruModel {
         this.email = email;
     }
 
-    public String getChannel() {
-        return channel;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setChannel(String channel) {
-        this.channel = channel;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAbout_id() {
+        return about_id;
+    }
+
+    public void setAbout_id(String about_id) {
+        this.about_id = about_id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAbout() {
@@ -65,28 +126,19 @@ public class GuruModel {
         this.about = about;
     }
 
-    public String getEducation() {
-        return education;
+    public String getRole_id() {
+        return role_id;
     }
 
-    public void setEducation(String education) {
-        this.education = education;
+    public void setRole_id(String role_id) {
+        this.role_id = role_id;
     }
 
-    public String getWork() {
-        return work;
+    public String getRole_code() {
+        return role_code;
     }
 
-    public void setWork(String work) {
-        this.work = work;
-    }
-
-    @Override
-    public String toString(){
-        if(this.name != null){
-            return this.name;
-        }else{
-            return "No Data!";
-        }
+    public void setRole_code(String role_code) {
+        this.role_code = role_code;
     }
 }

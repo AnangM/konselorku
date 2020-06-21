@@ -17,23 +17,12 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.divistant.konselorku.auth.ui.login.LoginActivity;
 import com.divistant.konselorku.auth.ui.signup.FinishEdu;
 import com.divistant.konselorku.auth.ui.signup.FinishSignup;
-import com.divistant.konselorku.ui.chat.ChatFragment;
-import com.divistant.konselorku.ui.dashboard.ArticleClickListener;
-import com.divistant.konselorku.ui.dashboard.ContentFragment;
-import com.divistant.konselorku.ui.dashboard.DashboardFragment;
-import com.divistant.konselorku.ui.dashboard.PostModel;
-import com.divistant.konselorku.ui.guru.GuruFragment;
-import com.divistant.konselorku.ui.intro.IntroActivity;
-import com.divistant.konselorku.ui.lapor.LaporFragment;
-import com.divistant.konselorku.ui.profil.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 

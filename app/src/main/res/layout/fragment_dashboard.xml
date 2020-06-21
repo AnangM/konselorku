@@ -50,7 +50,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <androidx.core.widget.ContentLoadingProgressBar
+    <ProgressBar
         android:id="@+id/dash_loading_one"
         android:layout_marginTop="70dp"
         android:layout_width="wrap_content"
@@ -59,10 +59,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toLeftOf="parent"
         app:layout_constraintLeft_toRightOf="parent"
-        style="@android:style/Widget.Holo.ProgressBar.Large"
         />
 
-    <androidx.core.widget.ContentLoadingProgressBar
+    <ProgressBar
         android:id="@+id/dash_loading_two"
         android:layout_marginBottom="300dp"
         android:layout_width="wrap_content"
@@ -71,6 +70,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="parent"
         app:layout_constraintLeft_toRightOf="parent"
-        style="@android:style/Widget.Holo.ProgressBar.Large"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

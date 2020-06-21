@@ -1,6 +1,7 @@
 package com.divistant.konselorku.ui.chat;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -13,12 +14,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.divistant.konselorku.R;
 import com.divistant.konselorku.auth.ui.signup.FinishEdu;
 import com.divistant.util.GeneralResponse;
+import com.divistant.util.RecyclerItemClickListener;
+import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
@@ -53,16 +57,10 @@ public class ChatFragment extends Fragment {
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
         rv.setLayoutManager(manager);
-
+        final ProgressBar loading = (ProgressBar) view.findViewById(R.id.chat_loading);
+        loading.setVisibility(View.VISIBLE);
         adapter = new ChatRoomAdapter(rooms);
         rv.setAdapter(adapter);
-
-        final ProgressDialog loadingDialog = new ProgressDialog(getActivity());
-        loadingDialog.setMax(100);
-        loadingDialog.setMessage("Mengambil data chat");
-        loadingDialog.setTitle("Tunggu sebentar ya");
-        loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        loadingDialog.show();
 
         final ChatInterface service = ChatApi.getClient().create(ChatInterface.class);
         Call<GeneralResponse<ChatRoomModel>> call = service
@@ -70,28 +68,29 @@ public class ChatFragment extends Fragment {
         call.enqueue(new Callback<GeneralResponse<ChatRoomModel>>() {
             @Override
             public void onResponse(Call<GeneralResponse<ChatRoomModel>> call, Response<GeneralResponse<ChatRoomModel>> response) {
+                loading.setVisibility(View.GONE);
                 if(response.code() == 200){
                     GeneralResponse<ChatRoomModel> gReponse = response.body();
                         if(!(gReponse.getListSize() < 1)){
-                            tv.setVisibility(View.INVISIBLE);
+                            tv.setVisibility(View.GONE);
                             List<ChatRoomModel> roomModelList = gReponse.getData();
                             for(ChatRoomModel room : roomModelList){
                                 rooms.add(room);
                             }
                             adapter.notifyDataSetChanged();
                         }else{
+                            tv.setVisibility(View.VISIBLE);
                             Toast.makeText(getActivity().getApplicationContext(),
                                     response.code() +" - " + gReponse.getMessage(),
                                     Toast.LENGTH_LONG)
                                     .show();
                         }
                 }
-                loadingDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<GeneralResponse<ChatRoomModel>> call, Throwable t) {
-                loadingDialog.dismiss();
+                loading.setVisibility(View.GONE);
                 t.printStackTrace();
                 Toast.makeText(getActivity().getApplicationContext(),
                         t.getMessage(),
@@ -99,6 +98,21 @@ public class ChatFragment extends Fragment {
                         .show();
             }
         });
+
+        rv.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), rv,
+                new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), ChatRoom.class);
+                intent.putExtra("target",(new Gson().toJson(rooms.get(position))));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
 
 
         return view;

@@ -6,9 +6,20 @@ public class UserModel {
     private String message;
     private String token;
 
+    private String user_id;
+
     private String name;
     private String role_code;
 
+    public UserModel(String status, String progress, String message, String token, String user_id, String name, String role_code) {
+        this.status = status;
+        this.progress = progress;
+        this.message = message;
+        this.token = token;
+        this.user_id = user_id;
+        this.name = name;
+        this.role_code = role_code;
+    }
 
     public UserModel(String status, String progress, String message, String token) {
         this.status = status;
@@ -23,6 +34,14 @@ public class UserModel {
         this.token = token;
         this.name = name;
         this.role_code = role_code;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     public String getStatus() {
