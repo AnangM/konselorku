@@ -4,19 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GeneralResponse<T> {
-    private String status;
+    private boolean success;
     private String message;
     private List<T> data;
     private T single_data;
 
-    public GeneralResponse(String status, String message, List<T> data) {
-        this.status = status;
+    public GeneralResponse(boolean success, String message) {
+        this.success = success;
+        this.message = message;
+    }
+
+    public GeneralResponse(boolean success, String message, List<T> data) {
+        this.success = success;
         this.message = message;
         this.data = data;
     }
 
-    public GeneralResponse(String status, String message, T single_data) {
-        this.status = status;
+    public GeneralResponse(boolean success, String message, T single_data) {
+        this.success = success;
         this.message = message;
         this.single_data = single_data;
     }
@@ -29,18 +34,12 @@ public class GeneralResponse<T> {
         this.single_data = single_data;
     }
 
-    public GeneralResponse(String status, String message) {
-        this.status = status;
-        this.message = message;
-        this.data = new ArrayList<>();
+    public boolean isSuccess() {
+        return success;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public String getMessage() {

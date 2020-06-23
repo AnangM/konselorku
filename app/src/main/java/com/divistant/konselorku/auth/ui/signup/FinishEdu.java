@@ -97,7 +97,7 @@ public class FinishEdu extends AppCompatActivity {
 
     private void finishEdu(){
         int school = sItem.getSelectedItemPosition();
-        int mClassPos = mClassSpinner.getSelectedItemPosition();
+        int mClassPos = mClassSpinner.getSelectedItemPosition()-1;
         Log.e("[GO]",schoolModelList.get(school).getId() + " - " + classModelList.get(mClassPos).getM_classes_id()) ;
         final SignupInterface service = SignupApi.getClient().create(SignupInterface.class);
         Map<String, Object> jsonParam = new ArrayMap<>();

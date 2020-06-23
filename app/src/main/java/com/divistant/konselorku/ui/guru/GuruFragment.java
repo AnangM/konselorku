@@ -28,6 +28,7 @@ import com.divistant.util.GeneralResponse;
 import com.divistant.util.RecyclerItemClickListener;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,7 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class GuruFragment extends Fragment {
-    List<GuruModel> gurus;
+    List<GuruModel> gurus = new ArrayList<>();
     SharedPreferences pref;
     final String TAG = "GURU FR";
     public GuruFragment() {

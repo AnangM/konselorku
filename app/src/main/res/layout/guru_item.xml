@@ -38,9 +38,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/guru_item_text_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="90dp"
         app:layout_constraintLeft_toRightOf="@id/guru_item_image"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,7 +50,8 @@
             android:id="@+id/guru_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="20sp"
+            android:fontFamily="@font/avenir_demi"
             android:textColor="@color/darkText"
             android:text="Nama Guru"
             app:layout_constraintLeft_toLeftOf="parent"

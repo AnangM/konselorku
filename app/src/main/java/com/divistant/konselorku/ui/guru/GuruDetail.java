@@ -87,7 +87,7 @@ public class GuruDetail extends AppCompatActivity {
         if(TextUtils.isEmpty(guru.getAvatar())){
             avatar.setVisibility(View.GONE);
             char ava = guru.getName().toUpperCase().charAt(0);
-            image_txt.setText(ava);
+            image_txt.setText(String.valueOf(ava));
             image_txt.setVisibility(View.VISIBLE);
             image_txt_container.setVisibility(View.VISIBLE);
         }else{

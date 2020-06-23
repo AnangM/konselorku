@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuruAdapter extends RecyclerView.Adapter<GuruAdapter.ViewHolder> {
-    List<GuruModel> listGuru = new ArrayList<>();
+    List<GuruModel> listGuru;
     public GuruAdapter(){}
 
     public GuruAdapter(List<GuruModel> listGuru) {

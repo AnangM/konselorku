@@ -1,4 +1,4 @@
-package com.divistant.net;
+package com.divistant.konselorku.ui.lapor;
 
 import com.divistant.util.GeneralResponse;
 import com.divistant.util.ImageModel;
@@ -11,13 +11,11 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
-
-public interface UploadInterface {
+public interface LaporInterface {
     @Headers({
             "Content-Type: application/json",
             "Accept: application/json"
     })
-    @POST("upload/image")
-    Call<GeneralResponse<ImageModel>> uploadImage(@Header("Authorization") String token, @Body RequestBody guruId);
-
+    @POST("lapor/add")
+    Call<GeneralResponse<LaporModel>> laporkan(@Header("Authorization") String token, @Body RequestBody guruId);
 }
