@@ -20,27 +20,31 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UploadImage {
+
+    public interface  UploadImageResponse{
+        void OnUploadDone(ImageModel img);
+        void onUploadFailed(String message);
+    }
+
     private Bitmap image;
     private String token;
     private String name;
     private String alt;
+    private UploadImageResponse resp;
 
-    public UploadImage( String token, Bitmap image) {
+
+    public UploadImage( String token, Bitmap image, UploadImageResponse resp) {
         this.image = image;
         this.token = token;
+        this.resp = resp;
     }
 
-    public UploadImage(Bitmap image, String token, String name, String alt) {
+    public UploadImage(String token,Bitmap image, String name, String alt, UploadImageResponse resp) {
         this.image = image;
         this.token = token;
         this.name = name;
         this.alt = alt;
-    }
-
-    public UploadImage(Bitmap image, String token, String name) {
-        this.image = image;
-        this.token = token;
-        this.name = name;
+        this.resp = resp;
     }
 
     public String getName() {
@@ -77,15 +81,18 @@ public class UploadImage {
             @Override
             public void onResponse(Call<GeneralResponse<ImageModel>> call, Response<GeneralResponse<ImageModel>> response) {
                 GeneralResponse<ImageModel> general = response.body();
-                if(general.isSuccess()){
-                    if(general.getSingle_data() != null){
-                        ImageModel img = general.getSingle_data();
+                if(response.code()==201){
+                    if(!general.getData().get(0).isNull()){
+                        ImageModel img = general.getData().get(0);
                         imgr.setAlt(img.getAlt());
                         imgr.setImage_id(img.getImage_id());
                         imgr.setName(img.getName());
                         imgr.setUrl(img.getUrl());
+
+                        resp.OnUploadDone(img);
                     }
                 }else{
+                    resp.onUploadFailed("Failed to upload - " + response.code());
                     imgr.setAlt(null);
                     imgr.setImage_id(0);
                     imgr.setName(null);
@@ -95,6 +102,7 @@ public class UploadImage {
 
             @Override
             public void onFailure(Call<GeneralResponse<ImageModel>> call, Throwable t) {
+                resp.onUploadFailed("Failed to upload - " + t.getMessage());
                 imgr.setAlt(null);
                 imgr.setImage_id(0);
                 imgr.setName(null);
@@ -109,7 +117,7 @@ public class UploadImage {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         this.image.compress(Bitmap.CompressFormat.JPEG,80,byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray,Base64.DEFAULT);
+        return "data:image/jpeg;base64,"+Base64.encodeToString(byteArray,Base64.DEFAULT);
     }
 
 }

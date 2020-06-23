@@ -22,8 +22,10 @@ import androidx.fragment.app.Fragment;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,7 @@ import com.divistant.util.UploadImage;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.acl.LastOwnerException;
 import java.text.SimpleDateFormat;
@@ -52,7 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LaporFragment extends Fragment {
+public class LaporFragment extends Fragment{
     Bitmap bitmap;
     ImageView image, imageHolder;
     EditText text;
@@ -97,13 +100,22 @@ public class LaporFragment extends Fragment {
         lapor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               UploadImage uploader= new UploadImage(pref.getString("TOKEN","key"),bitmap);
-               uploader.setName("laporan");
-               uploader.setAlt("LAPORAN");
-               ImageModel image = uploader.upload();
-               if(!image.isNull()){
-                    report(image);
-               }
+               new UploadImage(pref.getString("TOKEN", "key"),
+                       bitmap, "Laporan", "Laporan", new UploadImage.UploadImageResponse() {
+                   @Override
+                   public void OnUploadDone(ImageModel img) {
+                       if(!img.isNull()){
+                           Log.e("LAPOR","UPLOAD DONE");
+                           report(img);
+                       }
+                   }
+
+                   @Override
+                   public void onUploadFailed(String message) {
+                       Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                   }
+               }).upload();
+
             }
         });
 
@@ -116,7 +128,6 @@ public class LaporFragment extends Fragment {
                 builder.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getActivity(), "CHOOSEN " + which, Toast.LENGTH_LONG).show();
                         switch(which){
                             case 0:
                                 Intent intent = new Intent();
@@ -144,12 +155,12 @@ public class LaporFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == getActivity().RESULT_OK && data != null && data.getData() != null){
+        if(resultCode == getActivity().RESULT_OK){
             if(requestCode == REQUEST_IMAGE_GALERY){
                 Uri uri = data.getData();
                 try{
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                    Toast.makeText(getActivity(), "hey you selected image" + bitmap, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "hey you selected image" + bitmap, Toast.LENGTH_LONG).show();
                     image.setImageBitmap(bitmap);
                     imageHolder.setVisibility(View.INVISIBLE);
                 }catch (IOException e){
@@ -161,15 +172,16 @@ public class LaporFragment extends Fragment {
                 image.setImageBitmap(img);
                 imageHolder.setVisibility(View.INVISIBLE);
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String imageFileName = "K_" + timeStamp + "_";
+                String imageFileName = "K_" + timeStamp + ".jpg";
                 File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                 try{
-                    File image = File.createTempFile(
-                            imageFileName,  /* prefix */
-                            ".jpg",         /* suffix */
-                            storageDir      /* directory */
-                    );
-                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),Uri.fromFile(image));
+                    File myFile = new File(storageDir,imageFileName);
+                    FileOutputStream fos = new FileOutputStream(myFile);
+                    fos.flush();
+                    img.compress(Bitmap.CompressFormat.JPEG,100,fos);
+                    fos.close();
+                    MediaStore.Images.Media.insertImage(getActivity().getContentResolver(),img,myFile.getPath(), imageFileName);
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),Uri.fromFile(myFile));
                 }catch(IOException e){
                     e.printStackTrace();
                     Toast.makeText(getActivity(), "CANNOT SAVE IMAGE", Toast.LENGTH_LONG).show();
@@ -193,11 +205,22 @@ public class LaporFragment extends Fragment {
         call.enqueue(new Callback<GeneralResponse<LaporModel>>() {
             @Override
             public void onResponse(Call<GeneralResponse<LaporModel>> call, Response<GeneralResponse<LaporModel>> response) {
-                if(response.body().isSuccess()){
+                if(response.code()==201){
                     text.setText("");
                     image.setImageDrawable(null);
                     imageHolder.setVisibility(View.VISIBLE);
-                    Toast.makeText(getActivity(),"LAPORAN SUKSES",Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    LayoutInflater inflater = getActivity().getLayoutInflater();
+                    builder.setView(inflater.inflate(R.layout.lapor_ok_dialog,null))
+                            .setPositiveButton("Kembali", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    builder.show();
+                }else {
+                    Log.e("LAPOR","ERROR " + response.code());
                 }
             }
 
