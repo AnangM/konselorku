@@ -39,16 +39,20 @@ public class ReadNewsActivity extends AppCompatActivity {
                 .load(R.drawable.ic_launcher_foreground)
                 .apply(requestOptions)
                 .into(image);
+        if(!ReadNewsActivity.this.isFinishing() && image.getContext() != null){
+            post.GetImageUrl(new ImageGetter() {
+                @Override
+                public void imageGetter(String url) {
+                    if (!ReadNewsActivity.this.isFinishing() && image.getContext() != null) {
+                        Glide.with(image.getContext())
+                                .load(url)
+                                .apply(requestOptions)
+                                .into(image);
+                    }
 
-        post.GetImageUrl(new ImageGetter() {
-            @Override
-            public void imageGetter(String url) {
-                Glide.with(image.getContext())
-                        .load(url)
-                        .apply(requestOptions)
-                        .into(image);
-            }
-        });
+                }
+            });
+        }
 
         post.CategoryGetter(new CategoryGetter() {
             @Override

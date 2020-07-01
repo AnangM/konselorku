@@ -56,14 +56,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LaporFragment extends Fragment{
-    Bitmap bitmap;
-    ImageView image, imageHolder;
-    EditText text;
+    private Bitmap bitmap;
+    private ImageView image, imageHolder;
+    private EditText text;
 
-    SharedPreferences pref;
+    private SharedPreferences pref;
 
-    static final int REQUEST_IMAGE_GALERY = 1;
-    static final int REQUEST_IMAGE_CAPTURE = 2;
+    private static final int REQUEST_IMAGE_GALERY = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
 
     public LaporFragment() {
         // Required empty public constructor
@@ -97,9 +97,15 @@ public class LaporFragment extends Fragment{
         text = (EditText) view.findViewById(R.id.lapor_text);
         Button lapor = (Button) view.findViewById(R.id.laporkan_go);
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        final AlertDialog.Builder loading = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater1 = getActivity().getLayoutInflater();
+        loading.setView(inflater1.inflate(R.layout.general_loading,null));
+        loading.setTitle("Melaporkan...");
+        final AlertDialog loadingdialog = loading.create();
         lapor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loadingdialog.show();
                new UploadImage(pref.getString("TOKEN", "key"),
                        bitmap, "Laporan", "Laporan", new UploadImage.UploadImageResponse() {
                    @Override
@@ -107,15 +113,16 @@ public class LaporFragment extends Fragment{
                        if(!img.isNull()){
                            Log.e("LAPOR","UPLOAD DONE");
                            report(img);
+                            loadingdialog.dismiss();
                        }
                    }
 
                    @Override
                    public void onUploadFailed(String message) {
+                       loadingdialog.dismiss();
                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                    }
                }).upload();
-
             }
         });
 

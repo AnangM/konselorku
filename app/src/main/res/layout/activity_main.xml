@@ -23,9 +23,11 @@
         >
 
         <TextView
+            android:id="@+id/main_toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Konselorku"
+            android:fontFamily="@font/avenir_demi"
             android:textColor="@color/darkText"
             android:textStyle="bold"
             android:textSize="20dp"/>

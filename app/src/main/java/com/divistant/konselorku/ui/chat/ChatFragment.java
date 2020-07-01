@@ -1,6 +1,5 @@
 package com.divistant.konselorku.ui.chat;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,12 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.divistant.konselorku.R;
-import com.divistant.konselorku.auth.ui.signup.FinishEdu;
 import com.divistant.util.GeneralResponse;
 import com.divistant.util.RecyclerItemClickListener;
 import com.google.gson.Gson;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +65,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onResponse(Call<GeneralResponse<ChatRoomModel>> call, Response<GeneralResponse<ChatRoomModel>> response) {
                 loading.setVisibility(View.GONE);
+                tv.setVisibility(View.VISIBLE);
                 if(response.code() == 200){
                     GeneralResponse<ChatRoomModel> gReponse = response.body();
                         if(!(gReponse.getListSize() < 1)){
@@ -85,6 +82,14 @@ public class ChatFragment extends Fragment {
                                     Toast.LENGTH_LONG)
                                     .show();
                         }
+                }else{
+                    GeneralResponse<ChatRoomModel> gReponse = response.body();
+                    if(gReponse != null){
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                response.code() +" - " + gReponse.getMessage(),
+                                Toast.LENGTH_LONG);
+                    }
+                    Log.e("CHAT FRAG",response.code() +"");
                 }
             }
 

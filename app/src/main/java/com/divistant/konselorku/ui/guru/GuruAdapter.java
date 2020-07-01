@@ -38,26 +38,32 @@ public class GuruAdapter extends RecyclerView.Adapter<GuruAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull GuruAdapter.ViewHolder holder, int position) {
         GuruModel guru = listGuru.get(position);
-        if(TextUtils.isEmpty(guru.getAvatar())){
-            holder.avatar.setVisibility(View.GONE);
-            char ava = guru.getName().toUpperCase().charAt(0);
-            holder.image_txt.setText(String.valueOf(ava));
-        }else{
-            holder.image_txt.setVisibility(View.GONE);
-            holder.image_txt_layout.setVisibility(View.GONE);
-            Glide.with(holder.avatar.getContext())
-                    .load(guru.getAvatar())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(holder.avatar);
-        }
+       if(guru != null){
+           if(guru.getAvatar()==null){
+               holder.avatar.setVisibility(View.INVISIBLE);
+               String name = "K";
+               if(guru.getName() != null){
+                   name = guru.getName().toUpperCase();
+               }
+               char ava = name.charAt(0);
+               holder.image_txt.setText(String.valueOf(ava));
+           }else{
+               holder.image_txt.setVisibility(View.GONE);
+               holder.image_txt_layout.setVisibility(View.GONE);
+               Glide.with(holder.avatar.getContext())
+                       .load(guru.getAvatar())
+                       .apply(RequestOptions.circleCropTransform())
+                       .into(holder.avatar);
+           }
 
-        if(TextUtils.isEmpty(guru.getTitle())){
-            holder.title.setText("~");
-        }else{
-            holder.title.setText(guru.getTitle());
-        }
+           if(TextUtils.isEmpty(guru.getTitle())){
+               holder.title.setText("~");
+           }else{
+               holder.title.setText(guru.getTitle());
+           }
 
-        holder.name.setText(guru.getName());
+           holder.name.setText(guru.getName());
+       }
     }
 
     @Override

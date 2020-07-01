@@ -51,10 +51,6 @@ public class ImageModel {
     }
 
     public boolean isNull(){
-        if(this.image_id == 0 || TextUtils.isEmpty(this.url)){
-            return  true;
-        }else{
-            return false;
-        }
+        return this.url == null;
     }
 }

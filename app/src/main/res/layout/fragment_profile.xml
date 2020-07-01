@@ -1,36 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.profil.ProfileFragment">
+    tools:context=".ui.profil.ProfileFragment"
+    android:padding="20dp"
+    >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/profile_ph"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profil_top_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/hello_blank_fragment"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="20dp">
+        <LinearLayout
+            android:id="@+id/profil_img_txt_con"
+            android:layout_width="150dp"
+            android:layout_height="200dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="horizontal"
+            android:background="@drawable/general_block"
+            android:backgroundTint="@color/colorPrimary"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/profil_img_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="70sp"
+                android:text="A"
+                android:fontFamily="@font/avenir_demi"
+                android:textColor="#fff"
+                />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/profil_img"
+            android:layout_width="150dp"
+            android:layout_height="200dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:layout_marginTop="5dp"
+                android:id="@+id/profil_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:fontFamily="@font/avenir_demi"
+                android:text="NAME"
+                android:textColor="@color/darkText"
+                android:textSize="22sp"
+                app:layout_constraintLeft_toRightOf="@id/profil_img"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/profile_signout"
-        android:layout_width="wrap_content"
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/profile_school"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/profil_img"
+                app:layout_constraintTop_toBottomOf="@id/profil_name"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:text="NAMA SEKOLAH"/>
+
+        <LinearLayout
+            android:id="@+id/profil_settings"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@drawable/general_block"
+            android:backgroundTint="@color/lightPrimary"
+            android:gravity="center"
+            >
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_settings_black_24dp"
+                android:tint="@color/colorPrimary"
+                />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/profil_tab"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="SIGN OUT!"
-        app:layout_constraintTop_toBottomOf="@id/profile_ph"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/profil_top_container"
+        />
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/profil_vp"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
         />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

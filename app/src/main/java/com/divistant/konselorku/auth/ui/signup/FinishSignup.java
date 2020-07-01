@@ -39,7 +39,7 @@ public class FinishSignup extends AppCompatActivity {
     EditText alamat;
     EditText phone;
     RadioGroup genderSelect;
-    String gender;
+    String gender = "";
     Button nextBtn;
     TextView errTv;
     SharedPreferences pref;
@@ -88,27 +88,18 @@ public class FinishSignup extends AppCompatActivity {
         });
 
 
-        genderSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int selectedId = genderSelect.getCheckedRadioButtonId();
-                RadioButton radio = (RadioButton) findViewById(selectedId);
-
-                if(selectedId == R.id.radio_male){
-                    gender="M";
-                }else if(selectedId == R.id.radio_female){
-                    gender="F";
-                }
-            }
-        });
-
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if(checkUserData().equals("")){
                     Log.e("Click","TRUE");
-
+                    int selectedId = genderSelect.getCheckedRadioButtonId();
+                    if(selectedId == R.id.radio_male){
+                        gender="M";
+                    }else if(selectedId == R.id.radio_female){
+                        gender="F";
+                    }
                     errTv.setVisibility(View.INVISIBLE);
                     finishProfile();
 
@@ -129,13 +120,13 @@ public class FinishSignup extends AppCompatActivity {
     private void finishProfile(){
         final SignupInterface service = SignupApi.getClient().create(SignupInterface.class);
         Map<String, Object> jsonParam = new ArrayMap<>();
-        jsonParam.put("name",name.getText());
+        jsonParam.put("name",name.getText().toString());
         jsonParam.put("gender",gender);
-        jsonParam.put("dob",dob.getText());
-        jsonParam.put("address",alamat.getText());
-        jsonParam.put("phone",phone.getText());
+        jsonParam.put("dob",dob.getText().toString());
+        jsonParam.put("address",alamat.getText().toString());
+        jsonParam.put("phone",phone.getText().toString());
         if(code.getText().toString().length() > 0){
-            jsonParam.put("code",code.getText());
+            jsonParam.put("code",code.getText().toString());
         }
 
 
@@ -143,6 +134,8 @@ public class FinishSignup extends AppCompatActivity {
                         .parse("application/json; charset=utf-8"),
                         (new JSONObject(jsonParam))
                         .toString());
+
+        Log.e("FINISH",new JSONObject(jsonParam).toString());
 
         Call<FinishProfileModel> call = service
                 .finishProfile(pref.getString("TOKEN","none"),body);

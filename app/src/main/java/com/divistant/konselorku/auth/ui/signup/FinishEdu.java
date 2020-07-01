@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.divistant.konselorku.MainActivity;
 import com.divistant.konselorku.R;
+import com.divistant.konselorku.assesment.AssesmentActivity;
 import com.divistant.konselorku.auth.ui.login.UserModel;
 
 import org.json.JSONObject;
@@ -98,12 +99,14 @@ public class FinishEdu extends AppCompatActivity {
     private void finishEdu(){
         int school = sItem.getSelectedItemPosition();
         int mClassPos = mClassSpinner.getSelectedItemPosition()-1;
-        Log.e("[GO]",schoolModelList.get(school).getId() + " - " + classModelList.get(mClassPos).getM_classes_id()) ;
         final SignupInterface service = SignupApi.getClient().create(SignupInterface.class);
         Map<String, Object> jsonParam = new ArrayMap<>();
-        jsonParam.put("m_classes_id",schoolModelList.get(school).getId());
-        jsonParam.put("school_id",classModelList.get(mClassPos).getM_classes_id());
-
+        if(pref.getString("ROLE","konseli").equals("konselor")){
+            jsonParam.put("school_id", schoolModelList.get(school).getId());
+        }else {
+            jsonParam.put("school_id", schoolModelList.get(school).getId());
+            jsonParam.put("m_classes_id", classModelList.get(mClassPos).getM_classes_id());
+        }
         RequestBody body = RequestBody.create(okhttp3.MediaType
                         .parse("application/json; charset=utf-8"),
                 (new JSONObject(jsonParam))
@@ -131,8 +134,13 @@ public class FinishEdu extends AppCompatActivity {
                     editor.putString("ROLE",model.getRole_code());
                     editor.putString("UID",model.getUser_id());
                     editor.apply();
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    finish();
+                    if(model.getProgress().equals("4")){
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        finish();
+                    }else if(model.getProgress().equals("3")){
+                        startActivity(new Intent(getApplicationContext(), AssesmentActivity.class));
+                        finish();
+                    }
                 }else{
                     Log.e("[Fedu]",response.raw().toString());
                     Toast.makeText(FinishEdu.this,

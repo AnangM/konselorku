@@ -62,10 +62,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private void configureMine(final MyChatVH holder, int pos){
         ChatModel chat = chats.get(pos);
-        SimpleDateFormat sfd = new SimpleDateFormat("HH:mm");
-        String time = sfd.format(new Date(chat.getTimestamp() * 1000));
+//        SimpleDateFormat sfd = new SimpleDateFormat("HH:mm");
+//        String time = sfd.format(new Date(chat.getTimestamp() * 1000));
+
         holder.chat_tv.setText(chat.getMessage());
-        holder.time.setText(time);
+        holder.time.setText("time");
     }
 
     private void configureOther(final OtChatVH holder, int pos){

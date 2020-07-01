@@ -9,15 +9,20 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.divistant.konselorku.R;
+import com.divistant.konselorku.ui.chat.ChatInterface;
+import com.divistant.konselorku.ui.chat.ChatRoom;
+import com.divistant.konselorku.ui.chat.ChatRoomModel;
 import com.divistant.net.API;
 import com.divistant.net.GuruInterface;
 import com.divistant.util.GeneralResponse;
@@ -26,10 +31,13 @@ import com.google.gson.Gson;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.Date;
 import java.util.Map;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GuruDetail extends AppCompatActivity {
     private GuruModel guru;
@@ -71,7 +79,7 @@ public class GuruDetail extends AppCompatActivity {
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startChat();
             }
         });
 
@@ -85,7 +93,7 @@ public class GuruDetail extends AppCompatActivity {
         });
 
         if(TextUtils.isEmpty(guru.getAvatar())){
-            avatar.setVisibility(View.GONE);
+            avatar.setVisibility(View.INVISIBLE);
             char ava = guru.getName().toUpperCase().charAt(0);
             image_txt.setText(String.valueOf(ava));
             image_txt.setVisibility(View.VISIBLE);
@@ -127,5 +135,38 @@ public class GuruDetail extends AppCompatActivity {
         Call<GeneralResponse<GuruDetailModel>> call = service
                 .getGuruDetail(pref.getString("TOKEN","none"),guru.getId());
 
+    }
+
+    public void startChat(){
+        Map<String, Object> jsonParam = new ArrayMap<>();
+        jsonParam.put("target_id",guru.getId());
+        jsonParam.put("room_name","Chat " + new Date().getTime());
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType
+                        .parse("application/json; charset=utf-8"),
+                (new JSONObject(jsonParam))
+                        .toString());
+        ChatInterface service = API.getClient().create(ChatInterface.class);
+        Call<GeneralResponse<ChatRoomModel>> call = service.addRooms(pref.getString("TOKEN","def"),body);
+        call.enqueue(new Callback<GeneralResponse<ChatRoomModel>>() {
+            @Override
+            public void onResponse(Call<GeneralResponse<ChatRoomModel>> call, Response<GeneralResponse<ChatRoomModel>> response) {
+                if(response.code() == 201){
+                        GeneralResponse<ChatRoomModel> resp = response.body();
+                        ChatRoomModel model = resp.getData().get(0);
+                        Intent i = new Intent(GuruDetail.this, ChatRoom.class);
+                        i.putExtra("target",new Gson().toJson(model));
+                        startActivity(i);
+                }else{
+                    Toast.makeText(GuruDetail.this, response.code() +"",Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GeneralResponse<ChatRoomModel>> call, Throwable t) {
+                Toast.makeText(GuruDetail.this, t.getMessage() +"",Toast.LENGTH_LONG).show();
+                Log.e("GURU DETAIL",t.getMessage());
+            }
+        });
     }
 }

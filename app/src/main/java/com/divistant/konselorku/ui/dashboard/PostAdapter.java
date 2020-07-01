@@ -74,15 +74,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 .apply(requestOptions)
                 .into(holder.imageView);
 
-        news.GetImageUrl(new ImageGetter() {
-            @Override
-            public void imageGetter(String url) {
-                Glide.with(holder.imageView.getContext())
-                        .load(url)
-                        .apply(requestOptions)
-                        .into(holder.imageView);
-            }
-        });
+        if(!((Activity) holder.imageView.getContext()).isFinishing()){
+            news.GetImageUrl(new ImageGetter() {
+                @Override
+                public void imageGetter(String url) {
+                    Glide.with(holder.imageView.getContext())
+                            .load(url)
+                            .apply(requestOptions)
+                            .into(holder.imageView);
+                }
+            });
+        }
         }
         holder.parent.setTag(news);
 

@@ -23,5 +23,5 @@ public interface ChatInterface {
             "Accept: application/json"
     })
     @POST("chat/room/new")
-    Call<GeneralResponse<NewChatRoomModel>> addRooms(@Header("Authorization") String token,@Body RequestBody body);
+    Call<GeneralResponse<ChatRoomModel>> addRooms(@Header("Authorization") String token,@Body RequestBody body);
 }

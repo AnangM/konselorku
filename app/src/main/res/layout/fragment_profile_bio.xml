@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.profil.ProfileBio"
+    android:paddingTop="20dp"
+    android:orientation="vertical"
+
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/darkText"
+        android:fontFamily="@font/avenir_demi"
+        android:text="Tanggal Lahir"
+        />
+    <TextView
+        android:id="@+id/bio_dob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/darkText"
+        android:text="Tanggal Lahir"
+        android:layout_marginBottom="20dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/darkText"
+        android:fontFamily="@font/avenir_demi"
+        android:text="Alamat"
+        />
+    <TextView
+        android:id="@+id/bio_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/darkText"
+        android:text="Tanggal Lahir"
+        android:layout_marginBottom="20dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/darkText"
+        android:fontFamily="@font/avenir_demi"
+        android:text="Nomor Handphone"
+        />
+    <TextView
+        android:id="@+id/bio_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/darkText"
+        android:text="Tanggal Lahir"
+        android:layout_marginBottom="20dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/darkText"
+        android:fontFamily="@font/avenir_demi"
+        android:text="Jenis Kelamin"
+        />
+    <TextView
+        android:id="@+id/bio_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/darkText"
+        android:text="Tanggal Lahir"
+        android:layout_marginBottom="20dp"
+        />
+
+
+</LinearLayout>
