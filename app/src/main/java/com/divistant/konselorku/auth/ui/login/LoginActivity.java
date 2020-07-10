@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.text.TextWatcher;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -72,6 +74,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     GoogleSignInClient mGSC;
     SharedPreferences pref;
     TextView gotoSignUp;
+    AlertDialog loadingdialog;
+    AlertDialog.Builder loading;
 
     @Override
     public void onStart(){
@@ -102,6 +106,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signInWithGoogle = (SignInButton) findViewById(R.id.sign_in_google);
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         gotoSignUp = (TextView)  findViewById(R.id.signin_goto_signup);
+        loading = new AlertDialog.Builder(this);
+        LayoutInflater inflater1 = getLayoutInflater();
+        loading.setView(inflater1.inflate(R.layout.general_loading,null));
+        loading.setTitle("Memuat...");
+        loadingdialog = loading.create();
 
         Thread t = new Thread(new Runnable() {
             @Override
@@ -237,6 +246,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
      * @param idToken token from google choose account
      */
     private void authWithGoogle(String idToken){
+        loadingdialog.show();
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken,null);
         fAuth.signInWithCredential(credential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -246,6 +256,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     FirebaseUser user = fAuth.getCurrentUser();
                     doLogin(user.getEmail());
                 }else{
+                    loadingdialog.dismiss();
+                    Toast.makeText(getApplicationContext(),"Autentikasi Error",Toast.LENGTH_LONG).show();
                     Log.e("[FAUTH]","Auth Error");
                 }
             }
@@ -254,6 +266,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(getApplicationContext(),"Autentikasi Error",Toast.LENGTH_LONG).show();
         Log.e("[LOGIN]", "Connection Error");
     }
 
@@ -267,8 +280,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         call.enqueue(new Callback<UserModel>(){
             @Override
             public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                Log.e("[AUTH]", String.valueOf(response.code()));
-                Log.e("[AUTH]",response.raw().toString());
+                loadingdialog.dismiss();
                 if(response.code() == 200) {
                     final UserModel user = response.body();
 
@@ -294,6 +306,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         finish();
                     }
                 }else{
+                    loadingdialog.dismiss();
                     Toast.makeText(getApplicationContext(),
                             String.valueOf(response.code()),Toast.LENGTH_LONG).show();
                 }
@@ -301,7 +314,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             @Override
             public void onFailure(Call<UserModel> call, Throwable t) {
+                loadingdialog.dismiss();
                 Log.e("[AUTH ERR]", t.getMessage());
+                Toast.makeText(LoginActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
             }
         });
     }

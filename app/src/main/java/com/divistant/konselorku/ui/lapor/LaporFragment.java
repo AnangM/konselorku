@@ -120,7 +120,10 @@ public class LaporFragment extends Fragment{
                    @Override
                    public void onUploadFailed(String message) {
                        loadingdialog.dismiss();
+                       if(!(LaporFragment.this.isDetached() || LaporFragment.this.isRemoving() || LaporFragment.this.getView() == null)){
+                           
                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                       }
                    }
                }).upload();
             }
@@ -233,7 +236,9 @@ public class LaporFragment extends Fragment{
 
             @Override
             public void onFailure(Call<GeneralResponse<LaporModel>> call, Throwable t) {
+                if(!(LaporFragment.this.isDetached() || LaporFragment.this.isRemoving() || LaporFragment.this.getView() == null)){
                 Toast.makeText(getActivity(),t.getMessage(),Toast.LENGTH_LONG).show();
+                }
             }
         });
 

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.divistant.konselorku.R;
 import com.divistant.util.GetProfile;
+import com.google.gson.Gson;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -55,28 +56,27 @@ public class ProfileSchool extends Fragment {
         sch_addr = (TextView) view.findViewById(R.id.sch_addr);
         classes =(TextView) view.findViewById(R.id.sch_class);
         pref = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()).getApplicationContext());
-
-        GetProfile profileGetter = new GetProfile(pref.getString("TOKEN", "def"), new GetProfile.GetProfileResponse() {
+        setData();
+        pref.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
-            public void onSuccess(ProfilModel profil) {
-                sch.setText(profil.getSchool_name());
-                sch_addr.setText(profil.getSchool_address());
-                if(profil.getClass_name() == null){
-                    classes.setText("~");
-                }else{
-                    classes.setText(profil.getClass_grade() +" "+profil.getClass_name());
-                }
-            }
-
-            @Override
-            public void onFailed(String message) {
-                Toast.makeText(getActivity(),message,Toast.LENGTH_LONG).show();
-                Log.e("PROFIL",message);
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                setData();
             }
         });
 
-        profileGetter.get();
-
         return view;
+    }
+
+    public void setData(){
+        ProfilModel model = new Gson().fromJson(pref.getString("PROFILE",null),ProfilModel.class);
+        if(model != null) {
+            sch.setText(model.getSchool_name());
+            sch_addr.setText(model.getSchool_address());
+            if(model.getClass_name() == null){
+                classes.setText("~");
+            }else{
+                classes.setText(model.getClass_grade() +" "+model.getClass_name());
+            }
+        }
     }
 }

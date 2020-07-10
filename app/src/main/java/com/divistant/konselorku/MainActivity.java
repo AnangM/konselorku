@@ -91,8 +91,7 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
                         // Log and toast
                         String msg = "TOKEN = "  + token;
                         Log.d("MAIN", msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
+                }
                 });
 
     }
@@ -105,8 +104,8 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         vp = (ViewPager) findViewById(R.id.main_view_pager);
         toolbarText = (TextView) findViewById(R.id.main_toolbar_title);
-
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+//
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         menu  = (BottomNavigationView) findViewById(R.id.menu_view);
         menu.setOnNavigationItemSelectedListener(this);
@@ -214,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         finish();
     }
 }

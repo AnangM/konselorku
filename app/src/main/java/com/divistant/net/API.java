@@ -40,16 +40,10 @@ public class API {
 
     public static Retrofit getClient(){
         if(mRetrofit == null){
-            OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
-                    // Add all interceptors you want (headers, URL, logging)
-                    .addInterceptor(provideForcedOfflineCacheInterceptor())
-                    .cache(provideCache());
-            mOkHttpClient = httpClient.build();
 
             mRetrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(mOkHttpClient)
                     .build();
         }
         return mRetrofit;

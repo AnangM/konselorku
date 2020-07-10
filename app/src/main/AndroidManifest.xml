@@ -34,12 +34,22 @@
     <application
         android:name=".MyApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_newlogo_radius90"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_newlogo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".settings.SettingActivity"></activity>
+        <activity android:name=".LauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".settings.AccountSetting" />
+        <activity android:name=".settings.PasswordSetting" />
+        <activity android:name=".settings.BioSetting" />
+        <activity android:name=".settings.SettingActivity" />
         <activity android:name=".assesment.AssesmentActivity" />
         <activity
             android:name=".ui.guru.GuruDetail"
@@ -68,7 +78,7 @@
         <activity android:name=".ui.intro.IntroActivity" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

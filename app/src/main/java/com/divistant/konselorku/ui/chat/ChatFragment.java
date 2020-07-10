@@ -49,6 +49,7 @@ public class ChatFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.chat_room_rv);
         final TextView tv = (TextView) view.findViewById(R.id.chat_room_tv);
+        tv.setVisibility(View.INVISIBLE);
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
@@ -65,7 +66,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onResponse(Call<GeneralResponse<ChatRoomModel>> call, Response<GeneralResponse<ChatRoomModel>> response) {
                 loading.setVisibility(View.GONE);
-                tv.setVisibility(View.VISIBLE);
+                tv.setVisibility(View.INVISIBLE);
                 if(response.code() == 200){
                     GeneralResponse<ChatRoomModel> gReponse = response.body();
                         if(!(gReponse.getListSize() < 1)){
@@ -76,8 +77,9 @@ public class ChatFragment extends Fragment {
                             }
                             adapter.notifyDataSetChanged();
                         }else{
+                            tv.setText("500 - Internal server error");
                             tv.setVisibility(View.VISIBLE);
-                            Toast.makeText(getActivity().getApplicationContext(),
+                            Toast.makeText(getActivity(),
                                     response.code() +" - " + gReponse.getMessage(),
                                     Toast.LENGTH_LONG)
                                     .show();
@@ -85,7 +87,7 @@ public class ChatFragment extends Fragment {
                 }else{
                     GeneralResponse<ChatRoomModel> gReponse = response.body();
                     if(gReponse != null){
-                        Toast.makeText(getActivity().getApplicationContext(),
+                        Toast.makeText(getActivity(),
                                 response.code() +" - " + gReponse.getMessage(),
                                 Toast.LENGTH_LONG);
                     }
@@ -95,12 +97,16 @@ public class ChatFragment extends Fragment {
 
             @Override
             public void onFailure(Call<GeneralResponse<ChatRoomModel>> call, Throwable t) {
+                tv.setVisibility(View.VISIBLE);
+                tv.setText(t.getMessage());
                 loading.setVisibility(View.GONE);
-                t.printStackTrace();
-                Toast.makeText(getActivity().getApplicationContext(),
-                        t.getMessage(),
-                        Toast.LENGTH_LONG)
-                        .show();
+               if(!getActivity().isFinishing()){
+                   t.printStackTrace();
+                   Toast.makeText(getActivity(),
+                           t.getMessage(),
+                           Toast.LENGTH_LONG)
+                           .show();
+               }
             }
         });
 

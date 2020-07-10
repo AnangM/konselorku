@@ -34,6 +34,7 @@ import com.divistant.util.GeneralResponse;
 import com.divistant.util.GetProfile;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
 
 import java.util.Objects;
 
@@ -104,6 +105,9 @@ public class ProfileFragment extends Fragment {
         GetProfile profileGetter = new GetProfile(pref.getString("TOKEN", "def"), new GetProfile.GetProfileResponse() {
             @Override
             public void onSuccess(ProfilModel mprofil) {
+                SharedPreferences.Editor e = pref.edit();
+                e.putString("PROFILE",new Gson().toJson(mprofil));
+                e.apply();
                 if(mprofil.getAvatar() != null){
                     img_con.setVisibility(View.GONE);
                     imgTxt.setVisibility(View.GONE);
@@ -125,58 +129,21 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onFailed(String message) {
-                Toast.makeText(getActivity(),message,Toast.LENGTH_LONG).show();
-                Log.e("PROFIL",message);
+                if(!(ProfileFragment.this.isDetached() || ProfileFragment.this.isRemoving() || ProfileFragment.this.getView() == null)){
+                    Toast.makeText(getActivity(),message,Toast.LENGTH_LONG).show();
+                    Log.e("PROFIL",message);
+                }
+
             }
         });
 
         profileGetter.get();
 
 
-
-
-//        final TextView tv = view.findViewById(R.id.profile_ph);
-//
-//        if(FirebaseAuth.getInstance().getCurrentUser() != null){
-//            tv.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
-//        }
-//
-//        final Button sinot = view.findViewById(R.id.profile_signout);
-//
-//        sinot.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                doLogout();
-//            }
-//        });
-
         return view;
     }
 
-    private void doLogout(){
-        final LoginInterface service = LoginApi.getClient().create(LoginInterface.class);
-        Call<LogoutModel> call = service.doLogout(pref.getString("TOKEN","default"));
-        call.enqueue(new Callback<LogoutModel>() {
-            @Override
-            public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
-                if(response.code()==200){
-                    FirebaseAuth.getInstance().signOut();
-                    startActivity(new Intent(getActivity().getApplicationContext(), LoginActivity.class));
-                    getActivity().finish();
-                }else{
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            String.valueOf(response.code()),Toast.LENGTH_LONG).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<LogoutModel> call, Throwable t) {
-                    Log.e("[Logout]",t.getMessage());
-                Toast.makeText(getActivity().getApplicationContext(),
-                        t.getMessage(),Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
     @Override
     public void onDestroyView() {

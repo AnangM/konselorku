@@ -71,12 +71,14 @@ public class AssesmentActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AnswerModel answer = new AnswerModel(
-                        questions.get(position).getId(),
-                        pref.getString("UID","def"),
-                        ans.getText().toString()
-                );
-                answers.add(answer);
+                if(position < questions.size()){
+                    AnswerModel answer = new AnswerModel(
+                            questions.get(position).getId(),
+                            pref.getString("UID","def"),
+                            ans.getText().toString()
+                    );
+                    answers.add(answer);
+                }
                 position +=1;
                 if(position < questions.size()){
                     if(position + 1 == questions.size()){
@@ -88,7 +90,7 @@ public class AssesmentActivity extends AppCompatActivity {
                     QuestionModel mQuest = questions.get(position);
                     quest.setText(mQuest.getQuestion());
                     ans.setText("");
-                }else if(position == questions.size()){
+                }else if(position >= questions.size()){
                     doAnswer();
                 }
             }
@@ -124,6 +126,8 @@ public class AssesmentActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<GeneralResponse<QuestionModel>> call, Throwable t) {
                 loadingdialog.dismiss();
+                Log.e("ASSESMENT",t.getMessage());
+                Toast.makeText(AssesmentActivity.this, t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }

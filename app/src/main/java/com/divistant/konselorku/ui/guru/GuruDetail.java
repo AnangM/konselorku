@@ -3,6 +3,7 @@ package com.divistant.konselorku.ui.guru;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,7 +49,8 @@ public class GuruDetail extends AppCompatActivity {
     LinearLayout image_txt_container;
     ProgressBar loading;
     ConstraintLayout container;
-
+    AlertDialog.Builder mloading;
+    AlertDialog loadingdialog;
     SharedPreferences pref;
 
     @Override
@@ -141,16 +144,22 @@ public class GuruDetail extends AppCompatActivity {
         Map<String, Object> jsonParam = new ArrayMap<>();
         jsonParam.put("target_id",guru.getId());
         jsonParam.put("room_name","Chat " + new Date().getTime());
-
+        Log.e("START CHAT",new Gson().toJson(jsonParam));
         RequestBody body = RequestBody.create(okhttp3.MediaType
                         .parse("application/json; charset=utf-8"),
-                (new JSONObject(jsonParam))
-                        .toString());
+                (new Gson().toJson(jsonParam)));
         ChatInterface service = API.getClient().create(ChatInterface.class);
         Call<GeneralResponse<ChatRoomModel>> call = service.addRooms(pref.getString("TOKEN","def"),body);
+        mloading = new AlertDialog.Builder(this);
+        LayoutInflater inflater1 = getLayoutInflater();
+        mloading.setView(inflater1.inflate(R.layout.general_loading,null));
+        mloading.setTitle("Memulai percakapan...");
+        loadingdialog = mloading.create();
+        loadingdialog.show();
         call.enqueue(new Callback<GeneralResponse<ChatRoomModel>>() {
             @Override
             public void onResponse(Call<GeneralResponse<ChatRoomModel>> call, Response<GeneralResponse<ChatRoomModel>> response) {
+                loadingdialog.dismiss();
                 if(response.code() == 201){
                         GeneralResponse<ChatRoomModel> resp = response.body();
                         ChatRoomModel model = resp.getData().get(0);
@@ -164,6 +173,7 @@ public class GuruDetail extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GeneralResponse<ChatRoomModel>> call, Throwable t) {
+                loadingdialog.dismiss();
                 Toast.makeText(GuruDetail.this, t.getMessage() +"",Toast.LENGTH_LONG).show();
                 Log.e("GURU DETAIL",t.getMessage());
             }

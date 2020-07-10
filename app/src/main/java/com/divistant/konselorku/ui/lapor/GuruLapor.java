@@ -14,10 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ResourceCursorAdapter;
+
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.divistant.konselorku.R;
+
 import com.divistant.net.API;
 import com.divistant.net.LaporanInterface;
 import com.divistant.util.GeneralResponse;
@@ -34,6 +36,7 @@ import retrofit2.Response;
 public class GuruLapor extends Fragment {
     List<LaporanModel> laporans = new ArrayList<>();
     SharedPreferences pref;
+    ProgressBar load;
     private final String TAG = "GURU LAPORAN";
     public GuruLapor() {
         // Required empty public constructor
@@ -64,17 +67,21 @@ public class GuruLapor extends Fragment {
         final LaporanAdapter laporanAdapter = new LaporanAdapter(laporans);
         rv.setAdapter(laporanAdapter);
 
+        load = view.findViewById(R.id.guru_lapor_load);
+
         LaporanInterface laporanInterface = API.getClient().create(LaporanInterface.class);
         Call<GeneralResponse<LaporanModel>> call = laporanInterface.get(pref.getString("TOKEN","Def"));
         call.enqueue(new Callback<GeneralResponse<LaporanModel>>() {
             @Override
             public void onResponse(Call<GeneralResponse<LaporanModel>> call, Response<GeneralResponse<LaporanModel>> response) {
                 if(response.code() == 200){
+                    load.setVisibility(View.GONE);
                     GeneralResponse resp = response.body();
                     List<LaporanModel> laporan = resp.getData();
                     laporans.addAll(laporan);
                     laporanAdapter.notifyDataSetChanged();
                 }else{
+                    load.setVisibility(View.GONE);
                     GeneralResponse resp = response.body();
                     String m = String.valueOf(response.code() );
                     Toast.makeText(getActivity(), m,Toast.LENGTH_LONG).show();
@@ -83,8 +90,11 @@ public class GuruLapor extends Fragment {
 
             @Override
             public void onFailure(Call<GeneralResponse<LaporanModel>> call, Throwable t) {
-                Log.e(TAG,t.getMessage() + "");
-                Toast.makeText(getActivity(),t.getMessage(),Toast.LENGTH_LONG).show();
+                load.setVisibility(View.GONE);
+                if(!(GuruLapor.this.isDetached() || GuruLapor.this.isRemoving() || GuruLapor.this.getView() == null)){
+                    Log.e(TAG,t.getMessage() + "");
+                    Toast.makeText(getActivity(),t.getMessage(),Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -92,11 +102,6 @@ public class GuruLapor extends Fragment {
         rv.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), rv, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
                 final String[] options = {"Kirim Pesan"};
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Pilih aksi");
@@ -111,6 +116,11 @@ public class GuruLapor extends Fragment {
                     }
                 });
                 builder.show();
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
             }
         }));
 

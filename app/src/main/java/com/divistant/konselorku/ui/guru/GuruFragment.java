@@ -13,10 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +53,8 @@ public class GuruFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_guru,container,false);
         final TextView tv = view.findViewById(R.id.guru_ph);
+        EditText cari = view.findViewById(R.id.cari_guru);
+
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         final ProgressBar loading = view.findViewById(R.id.guru_loading);
         RecyclerView rv = view.findViewById(R.id.guru_rv);
@@ -85,8 +90,10 @@ public class GuruFragment extends Fragment {
                     loading.setVisibility(View.GONE);
                     tv.setText(response.code() +"");
                     tv.setVisibility(View.VISIBLE);
-                    Log.e(TAG, response.body().getMessage());
-                    Toast.makeText(getActivity(),response.body().getMessage(),Toast.LENGTH_LONG).show();
+                   if(response.body() != null){
+                       Log.e(TAG, response.body().getMessage());
+                       Toast.makeText(getActivity(),response.body().getMessage(),Toast.LENGTH_LONG).show();
+                   }
                 }
             }
 
@@ -95,8 +102,11 @@ public class GuruFragment extends Fragment {
                 loading.setVisibility(View.GONE);
                 tv.setText(t.getMessage());
                 tv.setVisibility(View.VISIBLE);
-                Log.e(TAG, t.getMessage());
+                
+                if(!(GuruFragment.this.isDetached() || GuruFragment.this.isRemoving() || GuruFragment.this.getView() == null)){
                 Toast.makeText(getActivity(),t.getMessage(),Toast.LENGTH_LONG).show();
+                }
+                Log.e(TAG, t.getMessage());
             }
         });
 
@@ -115,6 +125,23 @@ public class GuruFragment extends Fragment {
 
             }
         }));
+
+        cari.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         return view;
     }

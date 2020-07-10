@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.divistant.konselorku.R;
 import com.divistant.util.GetProfile;
+import com.google.gson.Gson;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +28,9 @@ import java.util.Objects;
 public class ProfileBio extends Fragment {
 
     private SharedPreferences pref;
+    SimpleDateFormat sfd1 = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sfd2 = new SimpleDateFormat("dd MMMM yyyy");
+    TextView gen,ph, addr,dob;
 
     public ProfileBio() {
         // Required empty public constructor
@@ -48,45 +52,44 @@ public class ProfileBio extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.fragment_profile_bio, container, false);
-        TextView dob = (TextView) view.findViewById(R.id.bio_dob);
-        TextView addr =(TextView) view.findViewById(R.id.bio_address);
-        TextView ph =(TextView) view.findViewById(R.id.bio_phone);
-        TextView gen =(TextView) view.findViewById(R.id.bio_gender);
+        dob = (TextView) view.findViewById(R.id.bio_dob);
+        addr =(TextView) view.findViewById(R.id.bio_address);
+        ph =(TextView) view.findViewById(R.id.bio_phone);
+        gen =(TextView) view.findViewById(R.id.bio_gender);
         pref = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()).getApplicationContext());
-        SimpleDateFormat sfd1 = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat sfd2 = new SimpleDateFormat("dd MMMM yyyy");
 
-        GetProfile profileGetter = new GetProfile(pref.getString("TOKEN", "def"), new GetProfile.GetProfileResponse() {
+
+        pref.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
-            public void onSuccess(ProfilModel profil) {
-                try {
-                    Date date = sfd1.parse(profil.getDob());
-                    dob.setText(sfd2.format(date));
-                } catch (ParseException e) {
-                    dob.setText("~");
-                    e.printStackTrace();
-                }
-
-                addr.setText(profil.getAddress());
-                ph.setText(profil.getPhone());
-                if(profil.getGender().equals("M")){
-                    gen.setText("Laki-laki");
-                }else{
-                    gen.setText("Perempuan");
-                }
-            }
-
-            @Override
-            public void onFailed(String message) {
-                Toast.makeText(getActivity(),message,Toast.LENGTH_LONG).show();
-                Log.e("PROFIL",message);
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                setData();
             }
         });
 
-        profileGetter.get();
-
+        setData();
 
         return view;
 
+    }
+
+    private void setData (){
+        ProfilModel model = new Gson().fromJson(pref.getString("PROFILE",null),ProfilModel.class);
+        if(model != null){
+            try {
+                Date date = sfd1.parse(model.getDob());
+                dob.setText(sfd2.format(date));
+            } catch (ParseException e) {
+                dob.setText("~");
+                e.printStackTrace();
+            }
+
+            addr.setText(model.getAddress());
+            ph.setText(model.getPhone());
+            if(model.getGender().equals("M")){
+                gen.setText("Laki-laki");
+            }else{
+                gen.setText("Perempuan");
+            }
+        }
     }
 }
